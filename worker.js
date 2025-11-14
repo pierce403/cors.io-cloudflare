@@ -19,7 +19,7 @@ const LANDING_PAGE = `<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>cors.io - CORS Proxy</title>
+  <title>cors.io</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -58,9 +58,11 @@ const LANDING_PAGE = `<!DOCTYPE html>
   </style>
 </head>
 <body>
-  <h1>cors.io - CORS Proxy</h1>
-  
-  <p>A simple CORS proxy service that allows you to fetch resources from any URL with CORS headers enabled.</p>
+  <h1>cors.io</h1>
+
+  <p>cors.io is a simple drop-in CORS proxy. Point your request here when you see browser console messages like <em>"No 'Access-Control-Allow-Origin' header is present on the requested resource"</em> or <em>"Access to fetch at ... from origin ... has been blocked by CORS policy"</em>. These are the errors that probably brought you here—use the proxy to debug and unblock your requests.</p>
+
+  <p>This worker is modeled after the original <a href="https://cors.io/">cors.io</a> landing page so you can still find it by searching for those CORS error strings.</p>
   
   <h2>Usage</h2>
   
@@ -96,8 +98,8 @@ const LANDING_PAGE = `<!DOCTYPE html>
   </div>
   
   <div class="note">
-    <strong>Note:</strong> This service adds CORS headers to all responses, allowing cross-origin requests from any domain.
-    The service supports GET, POST, and OPTIONS methods.
+    <strong>Need this because of the error above?</strong> Just proxy your request through cors.io and it will add the missing CORS headers for you.
+    The service supports GET, POST, and OPTIONS methods and will echo the response body so you can debug what your API is returning.
   </div>
   
   <h2>Features</h2>
