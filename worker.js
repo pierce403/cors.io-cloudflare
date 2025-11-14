@@ -19,7 +19,7 @@ const LANDING_PAGE = `<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>cors.io - CORS Proxy</title>
+  <title>cors.io</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -58,56 +58,34 @@ const LANDING_PAGE = `<!DOCTYPE html>
   </style>
 </head>
 <body>
-  <h1>cors.io - CORS Proxy</h1>
-  
-  <p>A simple CORS proxy service that allows you to fetch resources from any URL with CORS headers enabled.</p>
-  
-  <h2>Usage</h2>
-  
+  <h1>cors.io</h1>
+
+  <h2>The Problem</h2>
+  <p>Seeing messages like <em>"No 'Access-Control-Allow-Origin' header is present on the requested resource"</em> or <em>"Access to fetch at ... from origin ... has been blocked by CORS policy"</em>? Those CORS errors stop your app from talking to the API you need.</p>
+
+  <h2>The Solution</h2>
+  <p>Send the request through cors.io and we will add the missing headers so you can keep working.</p>
+
   <div class="example">
     <h3>Fetch a URL:</h3>
-    <p>Add <code>?url=</code> or <code>?u=</code> parameter with the target URL:</p>
-    <pre>https://your-worker.workers.dev/?url=https://api.example.com/data</pre>
-    <pre>https://your-worker.workers.dev/?u=https://api.example.com/data</pre>
+    <p>Add <code>?url=</code> or <code>?u=</code> with the target URL:</p>
+    <pre>https://cors.io/?url=https://api.example.com/data</pre>
+    <pre>https://cors.io/?u=https://api.example.com/data</pre>
   </div>
-  
-  <div class="example">
-    <h3>Response Format:</h3>
-    <p>The proxy returns a JSON response with the following structure:</p>
-    <pre>{
-  "url": "https://api.example.com/data",
-  "status": 200,
-  "headers": {
-    "content-type": "application/json",
-    ...
-  },
-  "body": "response body content"
-}</pre>
-  </div>
-  
+
   <div class="example">
     <h3>JavaScript Example:</h3>
-    <pre>fetch('https://your-worker.workers.dev/?url=https://api.example.com/data')
+    <pre>fetch('https://cors.io/?url=https://api.example.com/data')
   .then(response => response.json())
   .then(data => {
     console.log('Status:', data.status);
     console.log('Body:', data.body);
   });</pre>
   </div>
-  
+
   <div class="note">
-    <strong>Note:</strong> This service adds CORS headers to all responses, allowing cross-origin requests from any domain.
-    The service supports GET, POST, and OPTIONS methods.
+    <strong>Need this because of the error above?</strong> Just proxy your request through cors.io and it will add the missing CORS headers for you so you can debug the API response.
   </div>
-  
-  <h2>Features</h2>
-  <ul>
-    <li>✓ CORS headers enabled (Access-Control-Allow-Origin: *)</li>
-    <li>✓ Supports GET, POST, and OPTIONS methods</li>
-    <li>✓ Strips hop-by-hop headers</li>
-    <li>✓ Returns JSON response format</li>
-    <li>✓ Proxies request headers and body</li>
-  </ul>
 </body>
 </html>`;
 
