@@ -11,6 +11,8 @@ const HOP_BY_HOP_HEADERS = [
   'trailers',
   'transfer-encoding',
   'upgrade',
+  'host',
+  'origin',
 ];
 
 // HTML landing page with instructions
@@ -89,13 +91,41 @@ const LANDING_PAGE = `<!DOCTYPE html>
 </body>
 </html>`;
 
-// Add CORS headers to a response
-function addCorsHeaders(response) {
-  const headers = new Headers(response.headers);
-  headers.set('Access-Control-Allow-Origin', '*');
+function appendVary(headers, value) {
+  const existing = headers.get('Vary');
+  if (!existing) {
+    headers.set('Vary', value);
+    return;
+  }
+
+  const values = existing.split(',').map(item => item.trim().toLowerCase());
+  if (!values.includes(value.toLowerCase())) {
+    headers.set('Vary', `${existing}, ${value}`);
+  }
+}
+
+// Build CORS headers. Credentialed requests must echo Origin instead of using '*'.
+function corsHeaders(request, baseHeaders = {}) {
+  const headers = new Headers(baseHeaders);
+  const origin = request.headers.get('Origin');
+  const requestedHeaders = request.headers.get('Access-Control-Request-Headers');
+
+  if (origin) {
+    headers.set('Access-Control-Allow-Origin', origin);
+    headers.set('Access-Control-Allow-Credentials', 'true');
+    appendVary(headers, 'Origin');
+  } else {
+    headers.set('Access-Control-Allow-Origin', '*');
+  }
+
   headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  headers.set('Access-Control-Allow-Headers', '*');
+  headers.set('Access-Control-Allow-Headers', requestedHeaders || '*');
   headers.set('Access-Control-Max-Age', '86400');
+
+  if (requestedHeaders) {
+    appendVary(headers, 'Access-Control-Request-Headers');
+  }
+
   return headers;
 }
 
@@ -155,13 +185,9 @@ async function proxyUrl(url, request) {
     // Return JSON with CORS headers
     return new Response(JSON.stringify(jsonResponse), {
       status: 200,
-      headers: {
+      headers: corsHeaders(request, {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-        'Access-Control-Allow-Headers': '*',
-        'Access-Control-Max-Age': '86400',
-      },
+      }),
     });
   } catch (error) {
     // Return error as JSON
@@ -174,12 +200,9 @@ async function proxyUrl(url, request) {
       }),
       {
         status: 500,
-        headers: {
+        headers: corsHeaders(request, {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-          'Access-Control-Allow-Headers': '*',
-        },
+        }),
       }
     );
   }
@@ -194,12 +217,7 @@ export default {
     if (request.method === 'OPTIONS') {
       return new Response(null, {
         status: 204,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-          'Access-Control-Allow-Headers': '*',
-          'Access-Control-Max-Age': '86400',
-        },
+        headers: corsHeaders(request),
       });
     }
 
@@ -210,12 +228,9 @@ export default {
     if (!targetUrl) {
       return new Response(LANDING_PAGE, {
         status: 200,
-        headers: {
+        headers: corsHeaders(request, {
           'Content-Type': 'text/html; charset=utf-8',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-          'Access-Control-Allow-Headers': '*',
-        },
+        }),
       });
     }
 
