@@ -64,3 +64,8 @@ wrangler deploy
 
 - `worker.js` - Main worker code with ES modules syntax
 - `wrangler.toml` - Wrangler configuration
+
+## Licensing scope
+
+Original code and documentation authored for this project by Dean Pierce are licensed under the [Apache License 2.0](LICENSE).
+Third-party dependencies, assets, and quoted material retain their respective licenses and notices. This grant does not relicense third-party work.
